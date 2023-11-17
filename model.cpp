@@ -77,11 +77,11 @@ void sanke() // 散客中含有无偏好群体
         sk[i] = "[";
     }
     int j;
-    cin>>no;
+    cin >> no;
     string no1;
-    for(j=0;no!="0";j++)
-    {   
-        
+    for (j = 0; no != "0"; j++)
+    {
+
         if (no == "软卧")
             sk[j] += "1,";
 
@@ -124,7 +124,7 @@ void sanke() // 散客中含有无偏好群体
             sk[j] += "0,";
 
         cout << sk[j] << endl;
-        cin>>no;
+        cin >> no;
     }
 
     // test

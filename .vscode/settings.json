@@ -2,6 +2,43 @@
     "files.associations": {
         "iostream": "cpp",
         "cmath": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "ostream": "cpp"
+    },
+    "[java]": {
+        "files.encoding": "gbk",
+        "editor.rulers": [
+            120
+        ],
+        "editor.tabSize": 4,
+        "editor.detectIndentation": true,
+        "editor.trimAutoWhitespace": true,
+        "editor.useTabStops": true,
+        "editor.renderIndentGuides": true,
+        "editor.guides.indentation": true
+    },
+    "[c]": {
+        "files.encoding": "gbk",
+        "editor.rulers": [
+            120
+        ],
+        "editor.tabSize": 2,
+        "editor.detectIndentation": true,
+        "editor.trimAutoWhitespace": true,
+        "editor.useTabStops": true,
+        "editor.renderIndentGuides": true,
+        "editor.guides.indentation": true
+    },
+    "[cpp]": {
+        "files.encoding": "gbk",
+        "editor.rulers": [
+            120
+        ],
+        "editor.tabSize": 2,
+        "editor.detectIndentation": true,
+        "editor.trimAutoWhitespace": true,
+        "editor.useTabStops": true,
+        "editor.renderIndentGuides": true,
+        "editor.guides.indentation": true
     }
 }
