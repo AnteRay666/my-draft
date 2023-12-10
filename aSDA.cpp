@@ -69,25 +69,27 @@ struct Node
 // 队列的实现
 struct Queue
 {
-  Car cars[100];
-  int front, rear;
+  Node *front;
+  Node *rear;
 
-  Queue() : front(0), rear(-1) {}
+  Queue() : front(nullptr), rear(nullptr) {}
 
-  bool isEmpty() { return front > rear; }
-
-  bool isFull(int n) { return rear - front == n - 1; }
+  bool isEmpty()
+  {
+    return front == nullptr;
+  }
 
   void enqueue(Car car)
   {
-    if (!isFull())
+    Node *newNode = new Node(car);
+    if (isEmpty())
     {
-      rear++;
-      cars[rear] = car;
+      front = rear = newNode;
     }
     else
     {
-      cout << "便道已满，车辆 " << car.licensePlate << " 无法进入便道" << endl;
+      rear->next = newNode;
+      rear = newNode;
     }
   }
 
@@ -96,27 +98,18 @@ struct Queue
     Car car;
     if (!isEmpty())
     {
-      car = cars[front];
-      front++;
+      Node *temp = front;
+      car = temp->car;
+      front = front->next;
+      delete temp;
+      if (front == nullptr)
+      {
+        rear = nullptr;
+      }
     }
     return car;
   }
-
-  void display()
-  {
-    if (isEmpty())
-    {
-      cout << "便道上没有车辆" << endl;
-    }
-    else
-    {
-      cout << "便道上的车辆信息：" << endl;
-      for (int i = front; i <= rear; i++)
-      {
-        cout << "车牌号：" << cars[i].licensePlate << " 到达时间：" << cars[i].arrivalTime << "分钟" << endl;
-      }
-    }
-  }
+  void display();
 };
 // 在停车场类中添加一个 display 方法来显示停车场内车辆信息
 void Stack::display()
@@ -130,12 +123,29 @@ void Stack::display()
     cout << "停车场内车辆信息：" << endl;
     for (int i = top; i >= 0; i--)
     {
-      cout << "车牌号：" << cars[i].licensePlate << " 到达时间：" << cars[i].arrivalTime << "分钟" << endl;
+      cout << "车牌号：" << cars[i].licensePlate << " 停留时间：" << cars[i].arrivalTime << "分钟" << endl;
     }
   }
 }
 
 // 在便道队列类中添加一个 display 方法来显示便道上车辆信息
+void Queue::display()
+{
+  if (isEmpty())
+  {
+    cout << "便道上没有车辆" << endl;
+  }
+  else
+  {
+    cout << "便道上车辆信息：" << endl;
+    Node *current = front;
+    while (current != NULL)
+    {
+      cout << "车牌号：" << current->car.licensePlate << " 到达时间：" << current->car.arrivalTime << endl;
+      current = current->next;
+    }
+  }
+}
 int calculateFee(int arrivalTime, int departureTime, double cost)
 {
   // 这里简化为每分钟1元
@@ -188,7 +198,7 @@ int main()
       else
       {
         waitingQueue.enqueue(car);
-        cout << "车辆 " << car.licensePlate << " 在便道的位置" << waitingQueue.cars->arrivalTime << endl;
+        cout << "车辆 " << car.licensePlate << " 在便道的位置" << car.departureTime << endl;
       }
     }
     else if (AL == "L")
@@ -198,9 +208,11 @@ int main()
       cin >> licensePlate >> departureTime;
 
       // 将便道上的车辆移入停车场
-      while (!waitingQueue.isEmpty() && !parkingLot.isFull())
+      if (!waitingQueue.isEmpty() && !parkingLot.isFull())
       {
-        parkingLot.push(waitingQueue.dequeue());
+        Car carFromQueue = waitingQueue.dequeue();
+        carFromQueue.arrivalTime = departureTime; // Set the arrival time of the car from the queue to the departure time
+        parkingLot.push(carFromQueue);
       }
 
       // 寻找要离开的车辆
@@ -238,13 +250,13 @@ int main()
     {
       // 查询停车场停车状态
       cout << "停车场停车状态：" << endl;
-      parkingLot.display(); // 假设您有一个名为 display 的方法来显示停车场内车辆信息
+      parkingLot.display();
     }
     else if (AL == "W")
     {
       // 查询便道停车状态
       cout << "便道停车状态：" << endl;
-      waitingQueue.display(); // 假设您有一个名为 display 的方法来显示便道上车辆信息
+      waitingQueue.display();
     }
     else if (AL == "Q")
     {

@@ -1,205 +1,324 @@
 #include <bits/stdc++.h>
 using namespace std;
+
 #define MaxSize 100
-
-typedef struct Node // the car
+struct Car
 {
-  char AL;  // Arrive&Leave
-  int NO;   // the Car's number
-  int time; // AL's time
-} Node;
-
-typedef struct Stack
+  string NO;
+  string time; // time tpye is 00:00
+};
+// struct StackNode
+// {
+//   Car *stackArray;
+//   int top;
+//   int num;
+// };
+class Stack
 {
-  struct Node data[MaxSize];
+private:
+  Car *stackArray;
   int top;
   int num;
-} Sq;
 
-struct QNODE
-{
-  struct Node data;
-  QNODE *next;
+public:
+  Stack(int size)
+  {
+    num = size;
+    stackArray = new Car[num];
+    top = -1;
+  }
+  ~Stack()
+  {
+    delete[] stackArray;
+  }
+  bool isEmpty()
+  {
+    return top == -1;
+  }
+  bool isFull()
+  {
+    return top == num - 1;
+  }
+  void push(Car data)
+  {
+    if (isFull())
+    {
+      cout << "停车场已满，无法停车" << endl;
+      return;
+    }
+    stackArray[++top] = data;
+  }
+  Car pop()
+  {
+    if (isEmpty())
+    {
+      cout << "停车场为空，无法离开" << endl;
+      exit(1);
+    }
+    return stackArray[top--];
+  }
+  int getTop()
+  {
+    if (isEmpty())
+    {
+      exit(1);
+    }
+    return top;
+  }
+  void print()
+  {
+    cout << "停车场内的车辆：" << endl;
+    for (int i = 0; i <= top; i++)
+    {
+      cout << stackArray[i].NO << "在 " << stackArray[i].time << "进入停车场" << endl;
+    }
+    cout << endl;
+  }
 };
-
-typedef struct linkqueue // define the queue
+struct Node
 {
-  QNODE *front, *rear;
-  int num;
-} LinkQueue;
-
-Sq *_init_SeqStack() // set a empty stack
+  Car data;
+  Node *next;
+};
+class Queue
 {
-  Sq *a;
-  a = new Sq;
-  a->top = -1;
-  a->num = 0;
-  return a;
-}
+private:
+  Node *front;
+  Node *rear;
 
-LinkQueue *_init_LQueue() // set a empty queue.
-{
-  LinkQueue *q;
-  QNODE *p;
-  q = new LinkQueue;
-  p = new QNODE;
-
-  p->next = NULL;
-  q->front = q->rear = p;
-  q->num = 0;
-  return q;
-}
-// attention the "IE" is mean "isempty"
-int IE_SeqStack(Sq *s)
-{
-  if (s->top == -1)
-    return 1;
-  else
-    return 0;
-}
-// attention the "IF" is mean "isfull"
-int IF_SeqStack(Sq *s, int n)
-{
-  if (s->top == n - 1)
-    return 1;
-  else
-    return 0;
-}
-int IE_LQueue(LinkQueue *q)
-{
-  if (q->front == q->rear)
-    return 1;
-  else
-    return 0;
-}
-
-void Push_Lqueue(LinkQueue *q, Node s) // push the car into queue.
-{
-  QNODE *p;
-  p = new QNODE;
-  p->data = s;
-  q->num++;
-  p->next = NULL;
-  q->rear->next = p;
-  q->rear = p;
-}
-
-void Push_SeqStack(Sq *p, Node s) // push the car into stack
-{
-
-  p->top++;
-  p->data[p->top] = s;
-  // p->data.at(p->top)=s;??
-  p->num++;
-}
-
-int POP_SeqStack(Sq *s, Node car) // when the car leave,cout the time.
-{
-  Sq *p;
-  int t;
-  p = _init_SeqStack();
-
-  while (s->data[s->top].NO != car.NO)
+public:
+  Queue()
   {
-    Push_SeqStack(p, s->data[s->top]);
-    s->top--;
-    s->num--;
+    front = nullptr;
+    rear = nullptr;
   }
-  t = car.time - s->data[s->top].time;
-  s->top--;
-  s->num--;
-  while (IE_SeqStack(p) == 0)
+
+  ~Queue()
   {
-    Push_SeqStack(s, p->data[p->top]);
-    p->top--;
-    p->num--;
+    while (!isEmpty())
+    {
+      dequeue();
+    }
   }
-  return t;
-}
 
-Node Out_LQueue(LinkQueue *q) // out from the queue.
+  bool isEmpty()
+  {
+    return front == nullptr;
+  }
+
+  void enqueue(Car data)
+  {
+    Node *newNode = new Node;
+    newNode->data = data;
+    newNode->next = nullptr;
+
+    if (isEmpty())
+    {
+      front = newNode;
+      rear = newNode;
+    }
+    else
+    {
+      rear->next = newNode;
+      rear = newNode;
+    }
+  }
+
+  Car dequeue()
+  {
+    if (isEmpty())
+    {
+      cout << "便道为空" << endl;
+      exit(1);
+    }
+    Node *temp = front;
+    Car data = temp->data;
+    front = front->next;
+    delete temp;
+    return data;
+  }
+  int length()
+  {
+    int len = 0;
+    Node *current = front;
+    while (current != nullptr)
+    {
+      len++;
+      current = current->next;
+    }
+    return len;
+  }
+  void print()
+  {
+    if (isEmpty())
+    {
+      cout << "便道为空！" << endl;
+      return;
+    }
+    Node *temp = front;
+    int x = 1;
+    while (temp != nullptr)
+    {
+      cout << temp->data.NO << "在便道的第 " << x << "个位置" << endl;
+      temp = temp->next;
+      x++;
+    }
+    cout << endl;
+  }
+};
+int caltime(string &a, string &b)
 {
-  QNODE *p;
-  p = q->front->next;
-  q->front->next = p->next;
-  q->num--;
-  if (q->front->next == NULL)
-    q->rear = q->rear;
-  return p->data;
-  delete p;
+  int sum = 0;
+  if (stoi(a.substr(0, 2)) > stoi(b.substr(0, 2)))
+  {
+    sum = 60 * (stoi(b.substr(0, 2)) + 24 - stoi(a.substr(0, 2))) + stoi(b.substr(3, 2)) - stoi(a.substr(3, 2));
+  }
+  else if (stoi(a.substr(0, 2)) == stoi(b.substr(0, 2)))
+  {
+    if (stoi(a.substr(3, 2)) < stoi(b.substr(3, 2)))
+      sum = stoi(b.substr(3, 2)) - stoi(a.substr(3, 2));
+    else if (stoi(b.substr(3, 2)) == stoi(a.substr(3, 2)))
+      sum = 24 * 60;
+    else
+      sum = 24 * 60 - (stoi(a.substr(3, 2)) - stoi(b.substr(3, 2)));
+  }
+  else
+  {
+    sum = 60 * (stoi(b.substr(0, 2)) - stoi(a.substr(0, 2))) + stoi(b.substr(3, 2)) - stoi(a.substr(3, 2));
+  }
+  return sum;
 }
 
+double calfee(int &time, double &cost)
+{
+  double fee;
+  fee = time * cost;
+  return fee;
+}
+bool checktime(string &time)
+{
+  int hh = stoi(time.substr(0, 2));
+  int mm = stoi(time.substr(3, 2));
+  int flag = 0;
+  if (hh >= 0 && hh <= 23 && mm >= 0 && mm <= 59)
+    flag = 1;
+  if (!flag)
+  {
+
+    return 1;
+  }
+  return 0;
+}
+void start()
+{
+  cout << "Parking Lot Management System" << endl;
+  cout << "AL='A'表示到达停车场，如果停车场有空位，就停入停车场，否则在门外便道候车。" << endl;
+  cout << "AL='L'表示离开，如果在停车场，就根据停留时间进行缴费，否则不用收费。" << endl;
+  cout << "AL='P'表示查询停车场停车状态。" << endl;
+  cout << "AL='W'表示查询门外便道停车状态。" << endl;
+  cout << "AL='Q'表示输入终止，等待退出程序。" << endl;
+  cout << "请事先输入最大停车量n和停车每分钟所需要的费用cost." << endl;
+  cout << endl;
+}
 int main()
 {
-  Sq *Parkstack;
-  LinkQueue *Parkqueue;
-  Node Car;
-  int n; // using it as the maxsize of the park.
-  int a = 0;
-  int t;
-  double cost; // the cost per minute.
-  Parkstack = _init_SeqStack();
-  Parkqueue = _init_LQueue();
-  // cout << "停车场管理系统" << endl;
-  cout << "Parking Lot Management System" << endl;
-  cout << "Please enter the maxsize of Park " << endl;
-  cout << "n= ";
+  string AL; // Arrive or Leave or others;
+  string NO;
+  string time; // 00:00
+  int n;
+  double cost;
+  start();
+  cout << "最大停车量n = ";
   cin >> n;
   cout << endl;
-  cout << "Please enter the cost per minute " << endl;
-  cout << "cost= ";
+  cout << "停车每分钟所需要的费用cost = ";
   cin >> cost;
-  cout << endl;
-  //
-  cout << "Please enter the car's information (including state, num, time)" << endl;
-  cin >> Car.AL >> Car.NO >> Car.time; // the first car in
 
-  while (Car.AL != 'Q') // the 'Q' is terminate the System.
+  Stack parkingLot(n); // 创建停车场
+  Queue waitingQueue;  // 创建便道
+  while (cin >> AL)
   {
-    if (Car.AL == 'A') // arrive
+    if (AL == "A")
     {
-      if (IF_SeqStack(Parkstack, n) == 1)
+      cin >> NO >> time;
+      if (checktime(time))
       {
-        Push_Lqueue(Parkqueue, Car);
-        // cout << "这辆这在门外便道第" << Parkqueue->num << "个位置" << endl;
-        cout << "这辆这在门外便道第" << Parkqueue->num << "个位置" << endl;
-        cout << endl;
-        cout << "Please enter the car's information " << endl;
+        cout << "Error! Please enter the time again." << endl;
+        cin >> time;
+      }
+      Car car;
+      car.NO = NO;
+      car.time = time;
+      if (!parkingLot.isFull())
+      {
+        parkingLot.push(car);
+        cout << NO << " 停放在停车场第 " << parkingLot.getTop() + 1 << " 个位置" << endl;
       }
       else
       {
-        Push_SeqStack(Parkstack, Car);
-        cout << "这辆这在停车场内第" << Parkstack->num << "个位置" << endl;
-        cout << endl;
-        cout << "Please enter the car's information " << endl;
+        waitingQueue.enqueue(car);
+        cout << NO << " 停放在便道上第" << waitingQueue.length() << "个位置" << endl;
       }
     }
+    else if (AL == "L")
+    {
+      cin >> NO >> time;
+      Car tempCar;
+      Stack temp(n);
+      bool isFound = false;
+      // 从停车场中找到对应车辆并计算停留时间和费用
+      while (!parkingLot.isEmpty())
+      {
+        tempCar = parkingLot.pop();
+        if (tempCar.NO == NO)
+        {
+          if (!waitingQueue.isEmpty())
+            isFound = true;
+          break;
+        }
+        temp.push(tempCar);
+      }
+      while (!temp.isEmpty())
+      {
+        Car x = temp.pop();
+        parkingLot.push(x);
+      }
+      if (!waitingQueue.isEmpty())
+      {
+        Car nextCar = waitingQueue.dequeue();
+        nextCar.time = time;
+        parkingLot.push(nextCar);
+        cout << "汽车 " << nextCar.NO << "在" << nextCar.time << " 进入停车场" << endl;
+      }
 
-    if (Car.AL == 'L') // leave
-    {
-      t = POP_SeqStack(Parkstack, Car);
-      cout << "This car staytime is " << t << ", and the cost is " << t * cost << endl;
-      cout << "Please enter the car's information " << endl;
-      if (IE_LQueue(Parkqueue) == 0)
-        Push_SeqStack(Parkstack, Out_LQueue(Parkqueue));
+      if (isFound)
+      {
+        int ct = caltime(tempCar.time, time);
+        cout << "汽车 " << NO << " 在停车场内停留的时间为 " << ct << "，应交纳的费用为" << calfee(ct, cost) << endl;
+      }
+      else
+      {
+        cout << "未找到汽车 " << NO << endl;
+      }
     }
-    if (Car.AL == 'P' && Car.NO == 0 && Car.time == 0) // tell us the state of parking lot.
+    else if (AL == "P")
     {
-      cout << "The number of cars in the parking lot is " << Parkstack->num << endl;
-      cout << endl;
-      cout << "Please enter the car's information " << endl;
+      // cout << "P" << endl;
+      parkingLot.print();
     }
-    if (Car.AL == 'W' && Car.NO == 0 && Car.time == 0) // tell us the state of waiting yard.
+    else if (AL == "W")
     {
-      cout << "The number of cars in the waiting yard is " << Parkqueue->num;
-      cout << endl;
-      cout << "Please enter the car's information " << endl;
+      // cout << "W" << endl;
+      waitingQueue.print();
     }
-    cin >> Car.AL >> Car.NO >> Car.time;
+
+    else if (AL == "Q")
+    {
+      // cout << "Q" << endl;
+      system("pause");
+      return 0;
+    }
+    else
+      cout << "Error! Please enter again." << endl;
   }
-
-  cout << "Finished!" << endl;
-
-  system("pause");
-  return 0;
 }
