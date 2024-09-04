@@ -1,12 +1,13 @@
+// coding=utf-8
 #define _CRT_SECURE_NO_WARNINGS
-#include<iostream>
-#include<stdio.h>
-#include<cmath>
-#include<stdio.h>
-#include<iomanip>
+#include <iostream>
+#include <stdio.h>
+#include <cmath>
+#include <stdio.h>
+#include <iomanip>
 #define MAXSIZE 1000
 using namespace std;
-//This is a easy calculator for the probability of StarRail
+// This is a easy calculator for the probability of StarRail
 class sample
 {
 public:
@@ -15,12 +16,11 @@ public:
 	int zise;
 	int lanse;
 	int luse;
-
 };
-int Sum(sample a[],int n)
+int Sum(sample a[], int n)
 {
-	double sum1=0, sum2=0, sum3=0, sum4=0;
-	for (int i = 0; i <n; i++)
+	double sum1 = 0, sum2 = 0, sum3 = 0, sum4 = 0;
+	for (int i = 0; i < n; i++)
 	{
 		sum1 += a[i].TiLi;
 		sum2 += a[i].zise;
@@ -29,38 +29,37 @@ int Sum(sample a[],int n)
 	}
 	int times = sum1 / 10;
 
-	cout << "×Ü¼Æ´ÎÊý£º " << times<< endl;
-	cout << "×ÏÉ«´ÎÊý£º " << sum2 << endl;
-	cout << "À¶É«´ÎÊý£º " << sum3 << endl;
-	cout << "ÂÌÉ«´ÎÊý£º " << sum4 << endl;
+	cout << "ï¿½Ü¼Æ´ï¿½ï¿½ï¿½ï¿½ï¿½ " << times << endl;
+	cout << "ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ " << sum2 << endl;
+	cout << "ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ " << sum3 << endl;
+	cout << "ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ " << sum4 << endl;
 	cout << endl;
-	cout << "Í³¼Æ×ÏÉ«¸ÅÂÊ£º " << fixed << setprecision(2) << 100*sum2 / times << "%" << endl;
-	cout << "Í³¼ÆÀ¶É«¸ÅÂÊ£º " << fixed << setprecision(2) << 100*sum3 / times << "%" << endl;
-	cout << "Í³¼ÆÂÌÉ«¸ÅÂÊ£º " << fixed << setprecision(2) << 100*sum4 / times << "%" << endl;
+	cout << "Í³ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½Ê£ï¿½ " << fixed << setprecision(2) << 100 * sum2 / times << "%" << endl;
+	cout << "Í³ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½Ê£ï¿½ " << fixed << setprecision(2) << 100 * sum3 / times << "%" << endl;
+	cout << "Í³ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½Ê£ï¿½ " << fixed << setprecision(2) << 100 * sum4 / times << "%" << endl;
 	return 0;
 }
 
 int main()
 {
 	sample a[MAXSIZE];
-	//cin >> a.date >> a.TiLi >> a.zise >> a.lanse >> a.luse;
-	FILE* pf = fopen("C:\\Users\\AnteRay\\Desktop\\test.txt", "r");
+	// cin >> a.date >> a.TiLi >> a.zise >> a.lanse >> a.luse;
+	FILE *pf = fopen("C:\\Users\\AnteRay\\Desktop\\test.txt", "r");
 	if (pf == NULL)
 	{
 		perror("fopen()");
 		return 1;
 	}
 	int i = 0;
-	while(!feof(pf))
-	{ 
-	fscanf(pf, "%s %d  %d %d %d", &a[i].date,&a[i].TiLi, &a[i].zise, &a[i].lanse, &a[i].luse);
-	i++;
+	while (!feof(pf))
+	{
+		fscanf(pf, "%s %d  %d %d %d", &a[i].date, &a[i].TiLi, &a[i].zise, &a[i].lanse, &a[i].luse);
+		i++;
 	}
-	Sum(a,i);
+	Sum(a, i);
 	fclose(pf);
 	pf = NULL;
-	
+
 	system("pause");
 	return 0;
-
 }
