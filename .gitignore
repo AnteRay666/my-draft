@@ -1,0 +1,7 @@
+# 忽略所有的.pyc文件  
+*.pyc  
+
+# 忽略特定的文件夹  
+__pycache__/  
+logs/  
+temp/
